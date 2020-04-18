@@ -1,8 +1,11 @@
 package com.example.douyindemo.fragment
 
+import android.os.Bundle
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.aliyun.player.AliPlayer
 import com.aliyun.player.AliPlayerFactory
+import com.aliyun.player.IPlayer
 import com.aliyun.player.IPlayer.*
 import com.aliyun.player.bean.ErrorInfo
 import com.aliyun.player.bean.InfoBean
@@ -14,36 +17,38 @@ import kotlinx.android.synthetic.main.fragment_video.*
 
 class VideoFragment : BaseFragment() {
 
+    var aliyunVodPlayer: AliPlayer? = null
+
     override fun setLayoutView(): Int {
         return R.layout.fragment_video
     }
 
     override fun initView() {}
     override fun initData() {
-        val aliyunVodPlayer = AliPlayerFactory.createAliPlayer(activity)
+        aliyunVodPlayer = AliPlayerFactory.createAliPlayer(activity)
 
 
-        aliyunVodPlayer.setOnCompletionListener(OnCompletionListener {
+        aliyunVodPlayer?.setOnCompletionListener(OnCompletionListener {
             //播放完成事件
         })
-        aliyunVodPlayer.setOnErrorListener(OnErrorListener {
+        aliyunVodPlayer?.setOnErrorListener(OnErrorListener {
             //出错事件
         })
-        aliyunVodPlayer.setOnPreparedListener(OnPreparedListener {
+        aliyunVodPlayer?.setOnPreparedListener(OnPreparedListener {
             //准备成功事件
         })
-        aliyunVodPlayer.setOnVideoSizeChangedListener(OnVideoSizeChangedListener { width, height ->
+        aliyunVodPlayer?.setOnVideoSizeChangedListener(OnVideoSizeChangedListener { width, height ->
             //视频分辨率变化回调
         })
-        aliyunVodPlayer.setOnRenderingStartListener(OnRenderingStartListener {
+        aliyunVodPlayer?.setOnRenderingStartListener(OnRenderingStartListener {
             //首帧渲染显示事件
         })
-        aliyunVodPlayer.setOnInfoListener(object : OnInfoListener {
+        aliyunVodPlayer?.setOnInfoListener(object : OnInfoListener {
             override fun onInfo(p0: InfoBean?) {
                 //其他信息的事件，type包括了：循环播放开始，缓冲位置，当前播放位置，自动播放开始等
             }
         })
-        aliyunVodPlayer.setOnLoadingStatusListener(object : OnLoadingStatusListener {
+        aliyunVodPlayer?.setOnLoadingStatusListener(object : OnLoadingStatusListener {
             override fun onLoadingBegin() { //缓冲开始。
             }
 
@@ -53,17 +58,17 @@ class VideoFragment : BaseFragment() {
             override fun onLoadingEnd() { //缓冲结束
             }
         })
-        aliyunVodPlayer.setOnSeekCompleteListener(OnSeekCompleteListener {
+        aliyunVodPlayer?.setOnSeekCompleteListener(OnSeekCompleteListener {
             //拖动结束
         })
-        aliyunVodPlayer.setOnSubtitleDisplayListener(object : OnSubtitleDisplayListener {
+        aliyunVodPlayer?.setOnSubtitleDisplayListener(object : OnSubtitleDisplayListener {
             override fun onSubtitleShow(id: Long, data: String) { //显示字幕
             }
 
             override fun onSubtitleHide(id: Long) { //隐藏字幕
             }
         })
-        aliyunVodPlayer.setOnTrackChangedListener(object : OnTrackChangedListener {
+        aliyunVodPlayer?.setOnTrackChangedListener(object : OnTrackChangedListener {
             override fun onChangedSuccess(trackInfo: TrackInfo?) { //切换音视频流或者清晰度成功
             }
 
@@ -73,28 +78,33 @@ class VideoFragment : BaseFragment() {
             ) { //切换音视频流或者清晰度失败
             }
         })
-        aliyunVodPlayer.setOnStateChangedListener(OnStateChangedListener {
+        aliyunVodPlayer?.setOnStateChangedListener(OnStateChangedListener {
             //播放器状态改变事件
         })
-        aliyunVodPlayer.setOnSnapShotListener(OnSnapShotListener { bm, with, height ->
+        aliyunVodPlayer?.setOnSnapShotListener(OnSnapShotListener { bm, with, height ->
             //截图事件
         })
 
 
+        val bundle = arguments;//得到从Activity传来的数据
+
         val urlSource = UrlSource()
-        urlSource.uri =
-            "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"
+        if (bundle != null) {
+            val data = bundle.getString("data")
+            urlSource.uri = data
+        }
+
 
         //设置播放源
-        aliyunVodPlayer.setDataSource(urlSource);
+        aliyunVodPlayer?.setDataSource(urlSource);
         //准备播放
-        aliyunVodPlayer.prepare();
+        aliyunVodPlayer?.prepare();
 
 
 
         surfaceview.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
-                aliyunVodPlayer.setDisplay(holder)
+                aliyunVodPlayer?.setDisplay(holder)
             }
 
             override fun surfaceChanged(
@@ -103,16 +113,31 @@ class VideoFragment : BaseFragment() {
                 width: Int,
                 height: Int
             ) {
-                aliyunVodPlayer.redraw()
+                aliyunVodPlayer?.redraw()
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
-                aliyunVodPlayer.setDisplay(null)
+                aliyunVodPlayer?.setDisplay(null)
             }
         })
-        // 开始播放。
-        aliyunVodPlayer.start()
     }
 
     override fun initEvent() {}
+
+
+    /**
+     * 播放视频
+     */
+    fun playVideo() {
+
+        // 开始播放。
+        aliyunVodPlayer?.start()
+    }
+
+    /**
+     * 暂停视频
+     */
+    fun pauseVideo() {
+        aliyunVodPlayer?.pause()
+    }
 }

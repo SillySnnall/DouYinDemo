@@ -32,4 +32,10 @@ public class VerticalViewPager extends ViewPager {
     public boolean onTouchEvent(MotionEvent ev) {
         return super.onTouchEvent(swapTouchEvent(MotionEvent.obtain(ev)));
     }
+
+    @Override
+    public void setCurrentItem(int item) {
+        super.setCurrentItem(item);
+
+    }
 }
