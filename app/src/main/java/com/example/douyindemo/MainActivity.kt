@@ -1,9 +1,11 @@
 package com.example.douyindemo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View.OVER_SCROLL_NEVER
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.example.douyindemo.adapter.VerticalViewPagerAdapter
 import com.example.douyindemo.fragment.VideoFragment
 import com.example.douyindemo.view.DefaultTransformer
@@ -30,5 +32,24 @@ class MainActivity : AppCompatActivity() {
         val verticalViewPagerAdapter =
             VerticalViewPagerAdapter(supportFragmentManager, fragmentList)
         v_viewpager.adapter = verticalViewPagerAdapter
+
+        v_viewpager.offscreenPageLimit = 3
+        v_viewpager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            @SuppressLint("MissingSuperCall")
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+
+            }
+        })
     }
 }

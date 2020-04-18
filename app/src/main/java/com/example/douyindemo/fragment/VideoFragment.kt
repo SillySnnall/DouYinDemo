@@ -83,7 +83,7 @@ class VideoFragment : BaseFragment() {
 
         val urlSource = UrlSource()
         urlSource.uri =
-            "https://aweme.snssdk.com/aweme/v1/play/?video_id=v0200fc70000bnjpvdgnrm1raagdbapg&line=0&ratio=540p&watermark=1&media_type=4&vr_type=0&improve_bitrate=0&logo_name=aweme"
+            "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"
 
         //设置播放源
         aliyunVodPlayer.setDataSource(urlSource);
@@ -111,7 +111,7 @@ class VideoFragment : BaseFragment() {
             }
         })
         // 开始播放。
-        aliyunVodPlayer.start();
+        aliyunVodPlayer.start()
     }
 
     override fun initEvent() {}
